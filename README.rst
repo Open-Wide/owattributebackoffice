@@ -48,15 +48,16 @@ Usage
 2. add the attributes to display.
 
 Example : add reference and title
+
 .. code-block:: ini
 
-   [AttributeColumns]
-   Attribute[]
-   Attribute[]=reference
-   Attribute[]=title
-
-   [title]
-   Label=Title
-
-   [reference]
-   Label=Réfèrence
+    [AttributeColumns]
+    Attribute[]
+    Attribute[]=reference
+    Attribute[]=title
+    
+    [title]
+    Label=Title
+    
+    [reference]
+    Label=Réfèrence
