@@ -31,12 +31,6 @@ var vcols = {ldelim}
 
 {rdelim};
 
-var dataParser = function(data) {ldelim}
-    if ( data && data.content )
-        return data.content;
-    return '<i>NA</i>';
-{rdelim};
-
 var confObj = {ldelim}
 
 
@@ -64,8 +58,7 @@ var confObj = {ldelim}
     classesString: {$node.classes_js_array},
     flagIcons: icons
 
-{rdelim}
-
+{rdelim};
 
 var labelsObj = {ldelim}
 
@@ -95,12 +88,12 @@ var labelsObj = {ldelim}
                     {rdelim},
 
     DATA_TABLE_COLS_ATTRIBUTE: [{foreach $attribute_columns as $attribute}
-                                    {ldelim}key:"data_map.{$attribute}", label:"{if ezini_hasvariable( $attribute, 'Label', 'owattributebackoffice.ini')}{ezini( $attribute, 'Label', 'owattributebackoffice.ini')}{else}{$attribute}{/if}", sortable:false, resizeable:true{rdelim},
+                                    {ldelim}key:"{if ezini_hasvariable( $attribute, 'Class', 'owattributebackoffice.ini')}{ezini( $attribute, 'Class', 'owattributebackoffice.ini')}.{/if}data_map.{$attribute}", label:"{if ezini_hasvariable( $attribute, 'Label', 'owattributebackoffice.ini')}{ezini( $attribute, 'Label', 'owattributebackoffice.ini')}{else}{$attribute}{/if}", sortable:false, resizeable:true{rdelim},
                                 {/foreach}],
 
     DATA_SOURCE_ATTRIBUTE: [{foreach $attribute_columns as $attribute}
-        {ldelim}key:"data_map.{$attribute}", parser:dataParser{rdelim},
-    {/foreach}],
+                                {ldelim}key:"{if ezini_hasvariable( $attribute, 'Class', 'owattributebackoffice.ini')}{ezini( $attribute, 'Class', 'owattributebackoffice.ini')}.{/if}data_map.{$attribute}"{rdelim},
+                            {/foreach}],
 
     TABLE_OPTIONS: {ldelim}
 
@@ -127,8 +120,6 @@ var labelsObj = {ldelim}
                         next_page: "{'next'|i18n( 'design/admin/node/view/full' )|wash('javascript')}&nbsp;&rsaquo;",
                         last_page: "{'last'|i18n( 'design/admin/node/view/full' )|wash('javascript')}&nbsp;&raquo;"
                     {rdelim}
-
-
 {rdelim};
 
 {if and( $node.is_container,  $node.can_create)}

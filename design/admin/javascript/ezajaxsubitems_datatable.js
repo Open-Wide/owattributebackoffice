@@ -6,6 +6,7 @@ var sortableSubitems = function () {
     var createOptions;
     var dataTable;
     var shownColumns;
+    var sortAttributs = [];
 
     //Retrieves multiple values delimited by '|'
     function getCookieSubMultiValue(subName) {
@@ -157,6 +158,18 @@ var sortableSubitems = function () {
             return '?';
         }
 
+        var dataParser = function(data) {
+            if (data && data.content) {
+                if (jQuery.inArray( this.key, sortAttributs ) == -1) {
+                    sortAttributs.push(this.key);
+                    subItemsTable.getColumn(this.key).sortable = true;
+                    YAHOO.util.Dom.addClass(subItemsTable.getThEl(subItemsTable.getColumn(this.key)), YAHOO.widget.DataTable.CLASS_SORTABLE);
+                }
+                return data.content;
+            }
+            return '<i>NA</i>';
+        }
+
         var fields = [
                 {key:"name"},
                 {key:"hidden_status_string"},
@@ -183,7 +196,7 @@ var sortableSubitems = function () {
         ]
 
         for (v in labelsObj.DATA_SOURCE_ATTRIBUTE) {
-            fields.push(labelsObj.DATA_SOURCE_ATTRIBUTE[v]);
+            fields.push({key:labelsObj.DATA_SOURCE_ATTRIBUTE[v].key, parser:dataParser});
         }
 
         var dataSource = new YAHOO.util.DataSource(confObj.dataSourceURL);
@@ -196,7 +209,6 @@ var sortableSubitems = function () {
                 totalRecords: "content.total_count" // Access to value in the server response
             }
         };
-
 
         var paginator = new YAHOO.widget.Paginator({rowsPerPage:confObj.rowsPrPage,
                                                      containers: ["bpg"],

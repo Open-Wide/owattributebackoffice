@@ -52,9 +52,10 @@ class owjscServerFunctionsNode extends ezjscServerFunctionsNode
         $sort = isset( $args[3] ) ? self::sortMap( $args[3] ) : 'published';
         $order = isset( $args[4] ) ? $args[4] : false;
         $objectNameFilter = isset( $args[5] ) ? $args[5] : '';
-        if(preg_match('/data_map./', $sort)){
-            $sort = str_replace('data_map.', '', $sort);
-            $sort = array( array( 'attribute', $order, $args[6].'/'.$sort ) );
+
+        if(preg_match('/.data_map./', $sort)){
+            $sort = explode('.data_map.', $sort);
+            $sort = array( array( 'attribute', $order, $sort[0].'/'.$sort[1] ) );
         } else {
             $sort = array( array( $sort, $order ) );
         }
@@ -97,7 +98,7 @@ class owjscServerFunctionsNode extends ezjscServerFunctionsNode
         {
             $ini = eZINI::instance( 'owattributebackoffice.ini' );
             $attribute = $ini->variable( 'AttributeColumns', 'Attribute' );
-            $list = ezjscAjaxContent::nodeEncode( $nodeArray, array( 'formatDate' => 'shortdatetime',
+            $list = owjscAjaxContent::nodeEncode( $nodeArray, array( 'formatDate' => 'shortdatetime',
                                                                      'fetchThumbPreview' => true,
                                                                      'fetchSection' => true,
                                                                      'fetchCreator' => true,
