@@ -60,4 +60,5 @@ Example : add reference and title
     Label=Title
     
     [reference]
+    Class=mon_classe
     Label=Réfèrence

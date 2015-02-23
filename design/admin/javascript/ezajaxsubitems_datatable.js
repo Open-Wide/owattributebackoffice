@@ -159,15 +159,18 @@ var sortableSubitems = function () {
         }
 
         var dataParser = function(data) {
-            if (data && data.content) {
+            if(data) {
                 if (jQuery.inArray( this.key, sortAttributs ) == -1) {
                     sortAttributs.push(this.key);
                     subItemsTable.getColumn(this.key).sortable = true;
                     YAHOO.util.Dom.addClass(subItemsTable.getThEl(subItemsTable.getColumn(this.key)), YAHOO.widget.DataTable.CLASS_SORTABLE);
                 }
-                return data.content;
+                if (data.content) {
+                    return data.content;
+                }
+                return '';
             }
-            return '<i>NA</i>';
+            return '<abbr title="' + labelsObj.DATA_TABLE.msg_not_applicable + '"><i>NA</i></abbr>';
         }
 
         var fields = [

@@ -65,7 +65,9 @@ var labelsObj = {ldelim}
 
     DATA_TABLE: {ldelim}
 
-                        msg_loading: "{'Loading ...'|i18n( 'design/admin/node/view/full' )|wash('javascript')}"
+                        msg_loading: "{'Loading ...'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
+                        msg_sort_attribute: "{'Sorting applied can hide certain content'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
+                        msg_not_applicable: "{'Not Applicable'|i18n( 'design/admin/node/view/full' )|wash('javascript')}"
                     {rdelim},
 
     DATA_TABLE_COLS: {ldelim}
