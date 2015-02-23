@@ -275,12 +275,22 @@ var sortableSubitems = function () {
             }
         });
 
-
         // Update totalRecords on the fly with value from server
         subItemsTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
             oPayload.totalRecords = oResponse.meta.totalRecords;
             return oPayload;
         }
+
+
+        // Show message in sort attribute
+        subItemsTable.subscribe("headerCellClickEvent", function (oArgs) {
+            var target = oArgs.target,
+                column = this.getColumn(target);
+            if (jQuery.inArray( column.key, sortAttributs ) != -1) {
+                this._elMsgTbody.style.display = "";
+                this.showTableMessage('<b>' + labelsObj.DATA_TABLE.msg_sort_attribute + '</b>', YAHOO.widget.DataTable.CLASS_ERROR);
+            }
+        });
 
         // Table options
 
