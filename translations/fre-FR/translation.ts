@@ -11,5 +11,13 @@
             <source>Sorting applied can hide certain content</source>
             <translation>Le tri appliqué peut masquer certains contenus</translation>
         </message>
+        <message>
+            <source>Visible table columns:</source>
+            <translation>Attributs:</translation>
+        </message>
+        <message>
+            <source>Attributes of class</source>
+            <translation>Attributs de la classe</translation>
+        </message>
     </context>
 </TS>

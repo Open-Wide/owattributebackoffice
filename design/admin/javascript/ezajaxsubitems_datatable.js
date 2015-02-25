@@ -6,7 +6,8 @@ var sortableSubitems = function () {
     var createOptions;
     var dataTable;
     var shownColumns;
-    var sortAttributs = [];
+    var dataAttributs = [];
+    var className = {};
 
     //Retrieves multiple values delimited by '|'
     function getCookieSubMultiValue(subName) {
@@ -58,6 +59,19 @@ var sortableSubitems = function () {
             div.appendTo(a);
 
             a.appendTo(cell);
+        }
+
+        var showAttribute = function(cell, record, column, data) {
+            var data_map = record.getData('data_map');
+            if(column.key && data_map[column.key]) {
+                if(data_map[column.key].content) {
+                    cell.innerHTML = data_map[column.key].content;
+                } else {
+                    cell.innerHTML = '';
+                }
+            } else {
+                cell.innerHTML = '<abbr title="' + labelsObj.DATA_TABLE.msg_not_applicable + '"><i>NA</i></abbr>'
+            }
         }
 
         var thumbView = function(cell, record, column, data) {
@@ -127,9 +141,6 @@ var sortableSubitems = function () {
                 editor: new YAHOO.widget.TextboxCellEditor({asyncSubmitter: updatePriority, disableBtns:true, validator:YAHOO.widget.DataTable.validateNumber})},
         ];
 
-        for (v in labelsObj.DATA_TABLE_COLS_ATTRIBUTE) {
-            columnDefs.push(labelsObj.DATA_TABLE_COLS_ATTRIBUTE[v])
-        }
         // Hide columns based on cookie with ini setting as fallback
         // If neither cookie or ini is set: show all columns
         // Thumbnail column header has label, but is hidden w/CSS
@@ -158,19 +169,31 @@ var sortableSubitems = function () {
             return '?';
         }
 
-        var dataParser = function(data) {
-            if(data) {
-                if (jQuery.inArray( this.key, sortAttributs ) == -1) {
-                    sortAttributs.push(this.key);
-                    subItemsTable.getColumn(this.key).sortable = true;
-                    YAHOO.util.Dom.addClass(subItemsTable.getThEl(subItemsTable.getColumn(this.key)), YAHOO.widget.DataTable.CLASS_SORTABLE);
-                }
-                if (data.content) {
-                    return data.content;
-                }
-                return '';
+        var dataAttributeParser = function(dataMap) {
+            if(dataMap) {
+                jQuery.each(dataMap, function(i, val) {
+                    if (jQuery.inArray( i, dataAttributs ) == -1) {
+                        dataAttributs.push(i);
+                        subItemsTable.insertColumn({
+                            key: i,
+                            label: val.name + ' <small>(' + val.class_name + ')</small>',
+                            sortable:true,
+                            resizeable:true,
+                            formatter:showAttribute
+                        });
+                        if (jQuery.inArray( i, shownColumns ) == -1) {
+                            subItemsTable.hideColumn(i);
+                        } else {
+                            subItemsTable.showColumn(i);
+                        }
+                        if (className[val.class_name] == undefined) {
+                            className[val.class_name] = [];
+                        }
+                        className[val.class_name].push({key:i, name:val.name});
+                    }
+                });
             }
-            return '<abbr title="' + labelsObj.DATA_TABLE.msg_not_applicable + '"><i>NA</i></abbr>';
+           return dataMap;
         }
 
         var fields = [
@@ -196,11 +219,9 @@ var sortableSubitems = function () {
                 {key:"url"},
                 {key:"parent_node_id"},
                 {key:"can_edit"},
+                {key:"data_map", parser:dataAttributeParser},
         ]
 
-        for (v in labelsObj.DATA_SOURCE_ATTRIBUTE) {
-            fields.push({key:labelsObj.DATA_SOURCE_ATTRIBUTE[v].key, parser:dataParser});
-        }
 
         var dataSource = new YAHOO.util.DataSource(confObj.dataSourceURL);
         dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -212,7 +233,6 @@ var sortableSubitems = function () {
                 totalRecords: "content.total_count" // Access to value in the server response
             }
         };
-
         var paginator = new YAHOO.widget.Paginator({rowsPerPage:confObj.rowsPrPage,
                                                      containers: ["bpg"],
                                                      firstPageLinkLabel : "<span data-icon='&#xe065;'></span>",
@@ -282,18 +302,20 @@ var sortableSubitems = function () {
         }
 
 
-        // Show message in sort attribute
-        subItemsTable.subscribe("headerCellClickEvent", function (oArgs) {
-            var target = oArgs.target,
-                column = this.getColumn(target);
-            if (jQuery.inArray( column.key, sortAttributs ) != -1) {
-                this._elMsgTbody.style.display = "";
-                this.showTableMessage('<b>' + labelsObj.DATA_TABLE.msg_sort_attribute + '</b>', YAHOO.widget.DataTable.CLASS_ERROR);
+        subItemsTable.hideTableMessage = function () {
+            var column = this.get("sortedBy");
+            if (jQuery.inArray( column.key, dataAttributs ) == -1) {
+                if (this._elMsgTbody.style.display != "none") {
+                    this._elMsgTbody.style.display = "none";
+                    this._elMsgTbody.parentNode.style.width = "";
+                    this.fireEvent("tableMsgHideEvent");
+                }
+            } else {
+                this.showTableMessage('<b><img src="' + labelsObj.DATA_TABLE.img_alert + '" /> ' + labelsObj.DATA_TABLE.msg_sort_attribute + '</b>', YAHOO.widget.DataTable.CLASS_ERROR);
             }
-        });
+        }
 
         // Table options
-
         // Shows dialog, creating one when necessary
         var colLayoutHasChanged = true;
         var showTblOptsDialog = function(e) {
@@ -325,8 +347,8 @@ var sortableSubitems = function () {
                 colOptionsHTML += '<legend>' + labelsObj.TABLE_OPTIONS.header_vtc + '</legend><div class="block">';
 
                 // Create one section in the SimpleDialog for each column
-                var columnsLength = columns.length;
-                for (var i = 0, l = columnsLength; i < l; i++) {
+                var i = 0, keys = [];
+                for (i, l = 17; i < l; i++) {
                     var column = columns[i], label = column.getDefinition().label, key = column.getDefinition().key;
 
                     // Skip empty columns
@@ -335,7 +357,24 @@ var sortableSubitems = function () {
 
                     colOptionsHTML += '<div class="table-options-row"><span class="table-options-key">'+ label + '</span>';
                     colOptionsHTML += '<span class="table-options-value"><input id="table-option-col-btn-' + i + '" type="checkbox" name="TableOptionColumn" value="' + key + '"' + ( jQuery.inArray( key, shownColumns ) != -1 ? ' checked="checked"' : ''  ) + ' /></span></div>';
+                    keys[i] = key;
+                }
 
+                colOptionsHTML += '</div></fieldset>';
+                colOptionsHTML += '';
+
+                jQuery.each(className, function(label, attributes) {
+                    colOptionsHTML += '<fieldset><legend>' + labelsObj.TABLE_OPTIONS.header_attr_class + ' ' +label + ' : </legend><div class="block">';
+                    jQuery.each(attributes, function(j, attribute) {
+                        colOptionsHTML += '<div class="table-options-row"><span class="table-options-key">'  + attribute.name + '</span>';
+                        colOptionsHTML += '<span class="table-options-value"><input id="table-option-col-btn-' + i + '" type="checkbox" name="TableOptionColumn" value="' + attribute.key + '"' + ( jQuery.inArray( attribute.key, shownColumns ) != -1 ? ' checked="checked"' : ''  ) + ' /></span></div>';
+                        keys[i] = attribute.key;
+                        i++;
+                    });
+                    colOptionsHTML += '</div></fieldset>';
+                });
+
+                for (i = 0, l = keys.length; i < l; i++) {
                     YAHOO.util.Event.on("table-option-col-btn-" + i, "click", function(e, a) {
                         if (this.checked) {
                             subItemsTable.showColumn(a);
@@ -352,11 +391,10 @@ var sortableSubitems = function () {
                         // Update cookie and local variable
                         setCookieSubMultiValue(confObj.navigationPart, shownKeys);
                         shownColumns = shownKeys;
-                    }, key);
+                    }, keys[i]);
                 }
 
-                colOptionsHTML += '</div></fieldset>';
-
+                colOptionsHTML += '';
                 tblOptsDialog.setBody(colOptionsHTML);
                 colLayoutHasChanged = false;
             }
@@ -370,7 +408,7 @@ var sortableSubitems = function () {
 
         // SimpleDialog for Table options
 
-        var tblOptsDialog = new YAHOO.widget.SimpleDialog("to-dialog-container", {width: "25em",
+        var tblOptsDialog = new YAHOO.widget.SimpleDialog("to-dialog-container", {width: "30em",
                                                                                    visible: false,
                                                                                    modal: true,
                                                                                    buttons: [ {text: labelsObj.TABLE_OPTIONS.button_close,

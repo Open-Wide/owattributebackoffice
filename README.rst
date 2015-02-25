@@ -5,7 +5,7 @@ OWAttributeBackOffice for eZ Publish documentation
 .. image:: https://github.com/Open-Wide/OWNewsletter/raw/master/doc/images/Open-Wide_logo.png
     :align: center
 
-:Extension: OWAttributeBackOffice v1.0
+:Extension: OWAttributeBackOffice v1.1
 :Requires: eZ Publish 4.x.x (not tested on 3.X)
 :Author: Open Wide http://www.openwide.fr
 
@@ -39,26 +39,3 @@ Installation
 
     $ bin/php/ezpgenerateautoloads.php --extension
     $ bin/php/ezcache.php --clear-all
-
-Usage
-=====
-
-1. Copy settings/owattributebackoffice.ini in your admin siteaccess
-
-2. add the attributes to display.
-
-Example : add reference and title
-
-.. code-block:: ini
-
-    [AttributeColumns]
-    Attribute[]
-    Attribute[]=reference
-    Attribute[]=title
-    
-    [title]
-    Label=Title
-    
-    [reference]
-    Class=mon_classe
-    Label=Réfèrence

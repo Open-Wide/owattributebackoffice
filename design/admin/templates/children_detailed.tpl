@@ -67,7 +67,8 @@ var labelsObj = {ldelim}
 
                         msg_loading: "{'Loading ...'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
                         msg_sort_attribute: "{'Sorting applied can hide certain content'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
-                        msg_not_applicable: "{'Not Applicable'|i18n( 'design/admin/node/view/full' )|wash('javascript')}"
+                        msg_not_applicable: "{'Not Applicable'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
+                        img_alert: "{'alert.png'|ezimage('no')|wash('javascript')}"
                     {rdelim},
 
     DATA_TABLE_COLS: {ldelim}
@@ -89,19 +90,12 @@ var labelsObj = {ldelim}
                         objectstate: "{'Object state'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
                     {rdelim},
 
-    DATA_TABLE_COLS_ATTRIBUTE: [{foreach $attribute_columns as $attribute}
-                                    {ldelim}key:"{if ezini_hasvariable( $attribute, 'Class', 'owattributebackoffice.ini')}{ezini( $attribute, 'Class', 'owattributebackoffice.ini')}.{/if}data_map.{$attribute}", label:"{if ezini_hasvariable( $attribute, 'Label', 'owattributebackoffice.ini')}{ezini( $attribute, 'Label', 'owattributebackoffice.ini')}{else}{$attribute}{/if}", sortable:false, resizeable:true{rdelim},
-                                {/foreach}],
-
-    DATA_SOURCE_ATTRIBUTE: [{foreach $attribute_columns as $attribute}
-                                {ldelim}key:"{if ezini_hasvariable( $attribute, 'Class', 'owattributebackoffice.ini')}{ezini( $attribute, 'Class', 'owattributebackoffice.ini')}.{/if}data_map.{$attribute}"{rdelim},
-                            {/foreach}],
-
     TABLE_OPTIONS: {ldelim}
 
                         header: "{'Table options'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
                         header_noipp: "{'Number of items per page:'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
                         header_vtc: "{'Visible table columns:'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
+                        header_attr_class: "{'Attributes of class'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
                         button_close: "{'Close'|i18n( 'design/admin/node/view/full' )|wash('javascript')}"
                    {rdelim},
 
@@ -195,4 +189,4 @@ YUILoader.insert(options, 'js');
 <div id="content-sub-items-list" class="content-navigation-childlist"></div>
 <div id="bpg"></div>
 
-<div id="to-dialog-container"></div>
+    <div id="to-dialog-container"></div>

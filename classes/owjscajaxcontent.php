@@ -316,23 +316,26 @@ class owjscAjaxContent extends ezjscAjaxContent
             foreach( $dataMap as $key => $atr )
             {
                 $dataTypeString = $atr->attribute( 'data_type_string' );
+                $att = $atr->attribute( 'contentclassattribute_id' );
                 //if ( in_array( $dataTypeString, $params['imageDataTypes'], true) !== false )
 
-                if ( !in_array( 'all' ,$params['dataMap'], true )
-                   && !in_array( $key ,$params['dataMap'], true )
+                if (  !in_array( $key ,$params['dataMap'], true )
                    && !in_array( $dataTypeString, $params['dataMapType'], true )
                    && !( $params['loadImages'] && in_array( $dataTypeString, $params['imageDataTypes'], true ) ) )
                 {
                     continue;
                 }
 
-                $attrtibuteArray[ $key ]['id']         = $atr->attribute( 'id' );
-                $attrtibuteArray[ $key ]['type']       = $dataTypeString;
-                $attrtibuteArray[ $key ]['identifier'] = $key;
+                $attrtibuteArray[ $att ]['id']         = $atr->attribute( 'id' );
+                $attrtibuteArray[ $att ]['type']       = $dataTypeString;
+                $attrtibuteArray[ $att ]['identifier'] = $key;
+                $attrtibuteArray[ $att ]['name']       = $atr->contentClassAttributeName();
+                $attrtibuteArray[ $att ]['class_name'] = $ret['class_name'];
+
                 if ( isset ( $datatypeBlacklist[$dataTypeString] ) )
-                    $attrtibuteArray[ $key ]['content'] = null;
+                    $attrtibuteArray[ $att ]['content'] = null;
                 else
-                    $attrtibuteArray[ $key ]['content'] = $atr->toString();
+                    $attrtibuteArray[ $att ]['content'] = $atr->toString();
 
                 // images
                 if ( in_array( $dataTypeString, $params['imageDataTypes'], true) && $atr->hasContent() )
@@ -383,11 +386,11 @@ class owjscAjaxContent extends ezjscAjaxContent
                         }
                     );
 
-                    $attrtibuteArray[ $key ]['content'] = $imageArray;
+                    $attrtibuteArray[ $att ]['content'] = $imageArray;
                 }
             }
         }
-        $ret[$ret['class_identifier']]['data_map'] = $attrtibuteArray;
+        $ret['data_map'] = $attrtibuteArray;
         return $ret;
     }
 
