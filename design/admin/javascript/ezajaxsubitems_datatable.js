@@ -408,7 +408,7 @@ var sortableSubitems = function () {
 
         // SimpleDialog for Table options
 
-        var tblOptsDialog = new YAHOO.widget.SimpleDialog("to-dialog-container", {width: "30em",
+        var tblOptsDialog = new YAHOO.widget.SimpleDialog("to-dialog-container", {width: "auto",
                                                                                    visible: false,
                                                                                    modal: true,
                                                                                    buttons: [ {text: labelsObj.TABLE_OPTIONS.button_close,

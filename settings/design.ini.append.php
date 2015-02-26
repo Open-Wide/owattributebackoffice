@@ -4,4 +4,6 @@
 [ExtensionSettings]
 DesignExtensions[]=owattributebackoffice
 
+[StylesheetSettings]
+BackendCSSFileList[]=style.css
 */
