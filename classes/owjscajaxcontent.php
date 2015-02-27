@@ -332,13 +332,20 @@ class owjscAjaxContent extends ezjscAjaxContent
                 $attrtibuteArray[ $att ]['name']       = $atr->contentClassAttributeName();
                 $attrtibuteArray[ $att ]['class_name'] = $ret['class_name'];
 
-                if ( isset ( $datatypeBlacklist[$dataTypeString] ) )
+                if ( isset ( $datatypeBlacklist[$dataTypeString] ) ) {
                     $attrtibuteArray[ $att ]['content'] = null;
-                else
-                    $attrtibuteArray[ $att ]['content'] = $atr->toString();
+                } else {
+                    $datatypeHandlerClass = $dataTypeString . 'AttributeHandler';
+
+                    if ( !class_exists( $datatypeHandlerClass ) || !is_callable( $datatypeHandlerClass . '::toString' ) ) {
+                        $datatypeHandlerClass = "DefaultDatatypeAttributeHandler";
+                    }
+                    $attrtibuteArray[ $att ]['content'] = call_user_func( "$datatypeHandlerClass::toString", $atr );
+                }
+
 
                 // images
-                if ( in_array( $dataTypeString, $params['imageDataTypes'], true) && $atr->hasContent() )
+                /*if ( in_array( $dataTypeString, $params['imageDataTypes'], true) && $atr->hasContent() )
                 {
                     $content    = $atr->attribute( 'content' );
                     $imageArray = array();
@@ -387,7 +394,7 @@ class owjscAjaxContent extends ezjscAjaxContent
                     );
 
                     $attrtibuteArray[ $att ]['content'] = $imageArray;
-                }
+                }*/
             }
         }
         $ret['data_map'] = $attrtibuteArray;
