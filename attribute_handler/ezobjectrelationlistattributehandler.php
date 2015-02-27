@@ -15,7 +15,7 @@ class ezobjectrelationlistAttributeHandler extends DefaultDatatypeAttributeHandl
                     array_push($data, $node->getName());
                 }
             }
-            $result = implode(' , ', $data);
+            $result = implode(', ', $data);
             unset($content, $data);
         }
         return $result;
