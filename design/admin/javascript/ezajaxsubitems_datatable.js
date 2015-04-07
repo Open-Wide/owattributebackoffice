@@ -173,11 +173,15 @@ var sortableSubitems = function () {
             if(dataMap) {
                 jQuery.each(dataMap, function(i, val) {
                     if (jQuery.inArray( i, dataAttributs ) == -1) {
+                        var sort = true;
                         dataAttributs.push(i);
+                        if (jQuery.inArray(val.type, labelsObj.DATA_TABLE.cols_table_not_sortable) != -1) {
+                            sort = false;
+                        }
                         subItemsTable.insertColumn({
                             key: i,
                             label: val.name + ' <small>(' + val.class_name + ')</small>',
-                            sortable:true,
+                            sortable:sort,
                             resizeable:true,
                             formatter:showAttribute
                         });

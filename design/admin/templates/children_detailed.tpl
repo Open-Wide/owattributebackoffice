@@ -68,7 +68,8 @@ var labelsObj = {ldelim}
                         msg_loading: "{'Loading ...'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
                         msg_sort_attribute: "{'Sorting applied can hide certain content'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
                         msg_not_applicable: "{'Not Applicable'|i18n( 'design/admin/node/view/full' )|wash('javascript')}",
-                        img_alert: "{'alert.png'|ezimage('no')|wash('javascript')}"
+                        img_alert: "{'alert.png'|ezimage('no')|wash('javascript')}",
+                        cols_table_not_sortable: ["{ezini('DataTypeSettings', 'DataTypesNoSortable', 'owattributebackoffice.ini')|implode('", "')}"]
                     {rdelim},
 
     DATA_TABLE_COLS: {ldelim}
