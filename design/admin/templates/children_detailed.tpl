@@ -1,6 +1,5 @@
 {def $section         = fetch( 'section', 'object', hash( 'section_id', $node.object.section_id ) )
     $visible_columns  = ezini('SubItems', 'VisibleColumns', 'admininterface.ini')
-    $attribute_columns  = ezini('AttributeColumns', 'Attribute', 'owattributebackoffice.ini')
     $locales          = fetch( 'content', 'translation_list' ) }
 {literal}
 <script type="text/javascript">
